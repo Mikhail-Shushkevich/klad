@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Найди клад</title>
+    <!-- Создадим заголовок -->
+    <h1 id="heading">Найди клад!</h1>
+    <!-- Создадим карту -->
+    <img id="map" width="600" height="600" src="treasuremap.png" />
+    <!-- Создадим пустой параграф, чтобы туда выводить тпекст подсказок -->
+    <p id="distance"></p>
+    <!-- Подключаем библиотеку -->
+    <script src="jquery-3.7.1.js"></script>
+  </head>
+  <body>
+    <script>
+      // Выбираем случайное расположение клада - получаем случайное число от 0 до size - 1
+      let getRandomNumber = function (size) {
+        return Math.floor(Math.random() * size);
+      };
+
+      // Вычисляем расстояние от клика до клада
+      // Создаем функцию, чтобы выяснить горячо или холодно, нужно найти расстояние между точкой клика и местом, где лежит клад
+      // Функция принимает два аргумента event и target.
+      let getDistance = function (event, target) {
+        // Переменная diffX хранит горизонтальное расстояние между кликом и кладом, которое мы получаем вычитая target.x
+        // diffX - длинна горизонтальной стороны треугольника
+        let diffX = event.offsetX - target.x; //offsetX - х-координата клада, target.x - х-координата клика.
+        let diffY = event.offsetY - target.y;
+        // Формула для вычисления расстояния между кликом и кладом:
+        return Math.sqrt(diffX * diffX + diffY * diffY);
+      };
+
+      // Сообщаем игроку, насколько он близок к цели
+      let getDistanceHint = function (distance) {
+        if (distance < 10) {
+          return "Обожжешься!";
+        } else if (distance < 20) {
+          return "Очень горячо!";
+        } else if (distance < 40) {
+          return "Горячо!";
+        } else if (distance < 80) {
+          return "Тепло!";
+        } else if (distance < 160) {
+          return "Холодно";
+        } else if (distance < 320) {
+          return "Очень холодно!";
+        } else {
+          return "Замерзнешь!";
+        }
+      };
+
+      // Задаем координаты клада
+      let width = 400;
+      let height = 400;
+      // Подсчет кликов
+      let clicks = 0;
+      let target = {
+        x: getRandomNumber(width),
+        y: getRandomNumber(height),
+      };
+      // Создадим обработчик кликов - функция, которая будет вызываться каждый раз, когда игрок кликает по карте.
+      $("#map").click(function (event) {
+        clicks++;
+
+        // Вычисляем расстояние, получив нужную строку с сообщением и отобразим эту строку
+        // Сначала вызываем getDistance, сохраняя возвращенное значение в переменной distance.
+        let distance = getDistance(event, target);
+        // Передадим distance в getDistanceHint, чтобы получить соответствующую строку подсказки и сохранить в переменной distanceHint
+        let distanceHint = getDistanceHint(distance);
+        // С помощью этого кода - найдем элемент id, которого равен  distance и меняем его текст на значение distanceHint,
+        //  так что всякий раз при клике по карте, наша веб-страничка сообщает игроку, насколько близко он подошел к цели.
+        $("#distance").text(distanceHint);
+        // Проверка на выйгрыш
+        // Этот код проверяет расстояние до клада, в случае победы сообщпя об этом игроку
+        if (distance < 8) {
+          alert("Клад найден! Сделано кликов: " + clicks);
+        }
+      });
+    </script>
+  </body>
+</html>
