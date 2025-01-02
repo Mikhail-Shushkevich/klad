@@ -7,7 +7,7 @@
     <!-- Создадим заголовок -->
     <h1 id="heading">Найди клад!</h1>
     <!-- Создадим карту -->
-    <img id="map" width="600" height="600" src="treasuremap.png" />
+    <img id="map" width="800" height="800" src="treasuremap.png" />
     <!-- Создадим пустой параграф, чтобы туда выводить тпекст подсказок -->
     <p id="distance"></p>
     <!-- Подключаем библиотеку -->
@@ -28,54 +28,68 @@
         // diffX - длинна горизонтальной стороны треугольника
         let diffX = event.offsetX - target.x; //offsetX - х-координата клада, target.x - х-координата клика.
         let diffY = event.offsetY - target.y;
+
         // Формула для вычисления расстояния между кликом и кладом:
         return Math.sqrt(diffX * diffX + diffY * diffY);
       };
 
-      // Сообщаем игроку, насколько он близок к цели
+      // Сообщаем игроку, насколько он близок к цели + показываем колличество кликов
       let getDistanceHint = function (distance) {
         if (distance < 10) {
-          return "Обожжешься!";
+          return "Обожжешься! Введено колличество кликов: " + clicks;
         } else if (distance < 20) {
-          return "Очень горячо!";
+          return "Очень горячо! Введено колличество кликов: " + clicks;
         } else if (distance < 40) {
-          return "Горячо!";
+          return "Горячо! Введено колличество кликов: " + clicks;
         } else if (distance < 80) {
-          return "Тепло!";
+          return "Тепло! Введено колличество кликов: " + clicks;
         } else if (distance < 160) {
-          return "Холодно";
+          return "Холодно Введено колличество кликов: " + clicks;
         } else if (distance < 320) {
-          return "Очень холодно!";
+          return "Очень холодно! Введено колличество кликов: " + clicks;
+        } else if (distance < 640) {
+          return "Очень очень холодно Введено колличество кликов: " + clicks;
         } else {
-          return "Замерзнешь!";
+          return "Замерзнешь! Введено колличество кликов: " + clicks;
         }
       };
 
       // Задаем координаты клада
       let width = 400;
       let height = 400;
+
       // Подсчет кликов
       let clicks = 0;
       let target = {
         x: getRandomNumber(width),
         y: getRandomNumber(height),
       };
+
       // Создадим обработчик кликов - функция, которая будет вызываться каждый раз, когда игрок кликает по карте.
       $("#map").click(function (event) {
         clicks++;
 
         // Вычисляем расстояние, получив нужную строку с сообщением и отобразим эту строку
+
         // Сначала вызываем getDistance, сохраняя возвращенное значение в переменной distance.
         let distance = getDistance(event, target);
+
         // Передадим distance в getDistanceHint, чтобы получить соответствующую строку подсказки и сохранить в переменной distanceHint
         let distanceHint = getDistanceHint(distance);
+
         // С помощью этого кода - найдем элемент id, которого равен  distance и меняем его текст на значение distanceHint,
         //  так что всякий раз при клике по карте, наша веб-страничка сообщает игроку, насколько близко он подошел к цели.
         $("#distance").text(distanceHint);
+
         // Проверка на выйгрыш
         // Этот код проверяет расстояние до клада, в случае победы сообщпя об этом игроку
         if (distance < 8) {
           alert("Клад найден! Сделано кликов: " + clicks);
+        }
+
+        // Создадим ограничение по кликам
+        if (clicks >= 50) {
+          alert("Конец игры! Сделано кликов: " + clicks);
         }
       });
     </script>
