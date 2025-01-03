@@ -92,6 +92,27 @@
           alert("Конец игры! Сделано кликов: " + clicks);
         }
       });
+
+      // Адаптация игры
+      if (window.innerWidth < 768) {
+        console.log("Mobale version");
+        setupMobileVersion();
+      } else  {
+        console.log("Desktop version");
+        setupDesktopVersion();
+      }
+      function setupMobileVersion () {
+        const canvas = document.getElementById("gameCanvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        console.log("game for mobile");
+      }
+      function setupDesktopVersion () {
+        const canvas = document.getElementById("gameCanvas");
+        canvas.width = 800;
+        canvas.height = 800;
+        console.log("game for desktop");
+      }
     </script>
   </body>
 </html>
